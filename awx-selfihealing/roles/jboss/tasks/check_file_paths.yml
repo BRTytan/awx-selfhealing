@@ -1,0 +1,12 @@
+---
+- name: Ansible check file paths exists.
+  stat:
+    path: "{{ item }}"
+  with_items: "{{ paths }}"
+  register: file_details
+
+- name:
+  debug:
+    msg: "{{ item }}"
+  with_items: "{{ file_details.results | selectattr('stat.exists' or 'stat.exists' and 'stat.isreg') | map(attribute='item') | list }}"
+  

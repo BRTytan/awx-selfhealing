@@ -1,0 +1,6 @@
+all:
+  vars:
+    paths:
+      - /home/lab_felippe/scripts/jboss-ass-standalone.sh
+      - /home/lab_felippe/log/server.log
+      

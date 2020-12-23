@@ -1,0 +1,9 @@
+---
+- name: verify variables
+  assert:
+    that:
+      - paths is defined or paths != None or paths != ""
+
+- name: imported task check file paths
+  import_tasks: check_file_paths.yml
+  when: item is defined and item != None and item != ""

@@ -1,0 +1,36 @@
+- name: Playbook generic for restart jboss
+  hosts: localhost
+  gather_facts: false
+  vars_files:
+    - "{{ vault_path }}"
+  vars:
+    input: 
+      dynatrace_problem_details: "{{ problemDetails | default(omit, true) }}"
+      dynatrace_problem_id: "{{ pid | default(omit, true) }}"
+      dynatrace_problem_hostname: "{{ impactedEntity | default(omit, true) }}"
+      dynatrace_problem_tags: "{{ tags }}"
+      dynatrace_groups: "{{ groups }}"
+
+  tasks:
+    - name: Validate input templating
+      debug: var=input
+      run_once: true
+
+    - name: validate input vars
+      assert:
+        that:
+          - item.value != omit
+      with_dict: "{{ input }}"
+      run_once: true
+
+    - name: add new host to group passed in input.host_group
+      add_host:
+        name: "{{ input.dynatrace_problem_hostname }}"
+        groups: ["{{ input.dynatrace_groups }}"]
+      ignore_errors: yes
+
+    - name: execute role to restart jboss service
+      import_role:
+        name: jboss
+        tasks_from: restart_jboss_service.yml
+      
