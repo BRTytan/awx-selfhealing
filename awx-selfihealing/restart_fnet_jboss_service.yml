@@ -33,4 +33,5 @@
       import_role:
         name: jboss
         tasks_from: restart_jboss_service.yml
+      become: true
       

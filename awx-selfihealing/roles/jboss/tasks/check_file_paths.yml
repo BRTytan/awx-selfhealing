@@ -3,10 +3,10 @@
   stat:
     path: "{{ item }}"
   with_items: "{{ paths }}"
-  register: file_details
+  register: validate_paths
 
-- name:
-  debug:
-    msg: "{{ item }}"
-  with_items: "{{ file_details.results | selectattr('stat.exists' or 'stat.exists' and 'stat.isreg') | map(attribute='item') | list }}"
+- debug:
+    msg: "exist: {{ item.stat.exists }} isdir: {{ item.stat.isdir }}"
+  with_items: "{{ validate_paths.results }}"
+  when: item.stat.exists == True and item.stat.isdir == False
   

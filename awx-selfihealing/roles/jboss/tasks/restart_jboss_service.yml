@@ -7,3 +7,39 @@
 - name: imported task check file paths
   import_tasks: check_file_paths.yml
   when: item is defined and item != None and item != ""
+
+- name: simple command
+  become: true
+  command: whoami
+  register: output
+
+- debug:
+    msg: "I gave the command whoami and the out is '{{output.stdout}}'"
+
+- name: stop jboss server as jboss service user
+  command: sh "{{ paths[0] }}" start #- to stopped -{{ output.stdout }} -c 
+  register: stop_script
+
+# - name: waiting for server to come back return 0
+#   wait_for:
+#     timeout: 20
+#     host: "{{ hostname }}"
+#     port: 8080
+#     delay: 6
+#     state: stopped
+
+- name: start jboss server as jboss service user
+  command: sh "{{ paths[0] }}" start #
+  register: start_script
+
+- name: waiting for server to come back return 0
+  debug:
+    msg: "sucess"
+  when: start_script.stdout == "0"
+  # wait_for:
+  #   search_regex: "0"
+  #   timeout: 20
+  #   host: localhost
+  #   port: 8080
+  #   delay: 6
+  #   state: started
