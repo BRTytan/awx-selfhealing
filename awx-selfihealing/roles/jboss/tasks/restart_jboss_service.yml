@@ -20,6 +20,7 @@
   command: sh "{{ paths[0] }}" start #- to stopped -{{ output.stdout }} -c 
   register: stop_script
 
+
 # - name: waiting for server to come back return 0
 #   wait_for:
 #     timeout: 20
